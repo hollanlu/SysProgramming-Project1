@@ -41,17 +41,8 @@ int main(int argc, char* argv[])
 	// convert raw key to key without duplicate letters
 	key = removeDuplicates(rawKey);
 	
-	// TODO delete!!
-	//int x = targetFound(key, 5, 'l');
-	//printf("x: %i\n", x);
-	//printf("key: %s\n", key);
-	//char key[6] = "hello";
-	//char keyPass[100] = key;
 	initializeEncryptArray(key, encrypt);
-	printf("encrypt: %s\n", encrypt);
 	initializeDecryptArray(encrypt, decrypt);
-	printf("decrypt: %s\n", decrypt);
-	//printf("key: %s\n", key);
 	
 	if (choice == 1)  // encryption selected
 	{
@@ -106,6 +97,7 @@ int targetFound(char charArray[], int num, char target)
 	{
 		if (charArray[i] == target)
 		{
+			// we found it
 			found = 1;
 			break;
 		}		
@@ -124,12 +116,15 @@ void initializeEncryptArray(char key[], char encrypt[])
 	{
 		if (i < strlen(key))
 		{
+			// first few characters directly from key
 			k = key[i];
 		}
 		else
 		{
+			// start from z, add all missing letters
 			while (targetFound(encrypt, i, next) != 0)
 			{
+				// this letter's alread included, get the next
 				next--;
 			}
 			k = next;
@@ -167,31 +162,34 @@ void initializeDecryptArray(char encrypt[], char decrypt[])
 // substitute is encrypt/decrypt array
 void processInput(FILE * inf, FILE * outf, char substitute[])
 {
-	int pos;  // position of letter in alphabet
+	int pos, upper = 0;  // position of letter in alphabet, uppercase flag
 	char ch;
 	
 	while (fscanf(inf, "%c", &ch) != EOF)
 	{
+		// only f
 		if (isalpha(ch))
 		{
-			//pos = ch % 26;  // position in array, ie a = 0
-			// lower -> upper = lower - 32
+			// logic is in lowercase, so convert
 			if (isupper(ch))
-				ch = ch - 32;
-			pos = ch - 'a';// % 26;
-			printf("letter: %c pos: %i\n", substitute[pos], pos);
-			if (isupper(ch))
+			{
+				ch = tolower(ch);
+				upper = 1;
+			}
+			pos = ch - 'a';  // get position in array
+			if (upper == 1)
+			{
+				// need to convert back to uppercase and unflag
 				fprintf(outf, "%c", toupper(substitute[pos]));
+				upper = 0;
+			}
 			else
+			{
+				// no conversion needed
 				fprintf(outf, "%c", substitute[pos]);
+			}
 		}
 		else
 			fprintf(outf, "%c", ch);
 	}
 }
-
-
-
-
-
-
