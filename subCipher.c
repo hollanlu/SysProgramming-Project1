@@ -167,7 +167,7 @@ void processInput(FILE * inf, FILE * outf, char substitute[])
 	
 	while (fscanf(inf, "%c", &ch) != EOF)
 	{
-		// only f
+		// only encrypt/decrypt letters
 		if (isalpha(ch))
 		{
 			// logic is in lowercase, so convert
